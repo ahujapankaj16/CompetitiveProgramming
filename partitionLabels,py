@@ -1,0 +1,42 @@
+'''
+Partition Label
+A string S of lowercase English letters is given. We want to partition this string into as many parts as possible so that each letter appears in at most one part, and return a list of integers representing the size of these parts.
+
+ 
+
+Example 1:
+
+Input: S = "ababcbacadefegdehijhklij"
+Output: [9,7,8]
+Explanation:
+The partition is "ababcbaca", "defegde", "hijhklij".
+This is a partition so that each letter appears in at most one part.
+A partition like "ababcbacadefegde", "hijhklij" is incorrect, because it splits S into less parts.
+'''
+from collections import OrderedDict
+class Solution:
+    def partitionLabels(self, S: str) -> List[int]:
+        od = OrderedDict()
+        
+        for i in range(len(S)):
+            
+            if S[i] in od:
+                od[S[i]].append(i)
+            else:
+                od[S[i]] = [i]
+        i,j = od.popitem(last=False)
+        
+        current_low,current_high = j[0],j[-1]
+        res=[]
+        for i,j in od.items():
+            if j[0]>current_high:
+                res.append(current_high-current_low+1)
+                current_low = j[0]
+                current_high=j[-1]
+                
+            elif j[-1]>current_high:
+                current_high=j[-1]
+            else:
+                continue
+        res.append(current_high-current_low+1)
+        return res
